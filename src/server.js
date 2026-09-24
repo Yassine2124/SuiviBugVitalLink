@@ -7,16 +7,12 @@ const { protect } = require('./middleware/auth');
 require('dotenv').config();
 
 const app = express();
-//debut
 
-
-app.use('/api/auth', authRoutes);
-app.use('/api/bugs', protect, bugRoutes);
-//fin
 app.use(cors());
 app.use(express.json());
 
-app.use('/api/bugs', bugRoutes);
+app.use('/api/auth', authRoutes);
+app.use('/api/bugs', protect, bugRoutes);
 
 app.get('/', (req, res) => {
   res.send('Bug Tracker API is running');
