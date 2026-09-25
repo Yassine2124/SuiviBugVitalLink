@@ -5,7 +5,13 @@ const userSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   password: { type: String, required: true },
   role: { type: String, enum: ['admin', 'member'], default: 'member' },
-  isApproved: { type: Boolean, default: false }
+  isApproved: { type: Boolean, default: false },
+  permissions: {
+    canView: { type: Boolean, default: true },
+    canCreate: { type: Boolean, default: false },
+    canEdit: { type: Boolean, default: false },
+    canDelete: { type: Boolean, default: false }
+  }
 }, { timestamps: true });
 
 module.exports = mongoose.model('User', userSchema);

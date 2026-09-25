@@ -29,21 +29,34 @@ exports.login = async (req, res) => {
 
     if (!user.isApproved) return res.status(403).json({ error: 'Votre compte est en attente de validation' });
 
-    const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, { expiresIn: '7d' });
-    res.json({ token, user: { id: user._id, name: user.name, email: user.email, role: user.role } });
+    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
+    res.json({ token, user: { id: user._id, name: user.name, email: user.email, role: user.role, permissions: user.permissions } });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
 };
 
-// Réservé à l'admin
 exports.getPendingUsers = async (req, res) => {
   const users = await User.find({ isApproved: false }).select('-password');
   res.json(users);
 };
 
+exports.getAllUsers = async (req, res) => {
+  const users = await User.find({ isApproved: true, role: { $ne: 'admin' } }).select('-password');
+  res.json(users);
+};
+
 exports.approveUser = async (req, res) => {
   const user = await User.findByIdAndUpdate(req.params.id, { isApproved: true }, { new: true }).select('-password');
+  if (!user) return res.status(404).json({ error: 'Utilisateur non trouvé' });
+  res.json(user);
+};
+
+exports.updatePermissions = async (req, res) => {
+  const { canView, canCreate, canEdit, canDelete } = req.body;
+  const user = await User.findByIdAndUpdate(req.params.id, {
+    permissions: { canView, canCreate, canEdit, canDelete }
+  }, { new: true }).select('-password');
   if (!user) return res.status(404).json({ error: 'Utilisateur non trouvé' });
   res.json(user);
 };
