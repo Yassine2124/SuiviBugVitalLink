@@ -7,6 +7,7 @@ router.post('/register', authController.register);
 router.post('/login', authController.login);
 router.get('/pending', protect, isAdmin, authController.getPendingUsers);
 router.get('/users', protect, isAdmin, authController.getAllUsers);
+router.get('/team', protect, authController.getTeamMembers);
 router.put('/approve/:id', protect, isAdmin, authController.approveUser);
 router.put('/permissions/:id', protect, isAdmin, authController.updatePermissions);
 

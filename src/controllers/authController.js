@@ -46,6 +46,11 @@ exports.getAllUsers = async (req, res) => {
   res.json(users);
 };
 
+exports.getTeamMembers = async (req, res) => {
+  const users = await User.find({ isApproved: true }).select('name email role');
+  res.json(users);
+};
+
 exports.approveUser = async (req, res) => {
   const user = await User.findByIdAndUpdate(req.params.id, { isApproved: true }, { new: true }).select('-password');
   if (!user) return res.status(404).json({ error: 'Utilisateur non trouvé' });
