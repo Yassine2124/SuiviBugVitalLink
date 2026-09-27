@@ -8,7 +8,7 @@ const bugSchema = new mongoose.Schema({
   category: { type: String, enum: ['Bug', 'Amélioration', 'Nouvelle fonctionnalité'], default: 'Bug' },
   platform: { type: String, enum: ['Web', 'Mobile', 'Web & Mobile'], default: 'Web' },
   assignedTo: { type: String },
-  tester: { type: String },
+  testers: { type: [String], default: [] },
   priority: { type: String, enum: ['Haute', 'Moyenne', 'Basse'], default: 'Moyenne' },
   status: { type: String, enum: ['Ouvert', 'En cours', 'En test', 'Résolu'], default: 'Ouvert' },
   dueDate: { type: Date },
