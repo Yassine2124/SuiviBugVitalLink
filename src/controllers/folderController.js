@@ -1,10 +1,19 @@
 const Folder = require('../models/Folder');
 const Document = require('../models/Document');
-const { hasAccess } = require('../middleware/docAccess');
+const { hasAccess, canContribute } = require('../middleware/docAccess');
 
 exports.createFolder = async (req, res) => {
   try {
     const { name, parent, visibility, allowedUsers } = req.body;
+
+    if (parent) {
+      const parentFolder = await Folder.findById(parent);
+      if (!parentFolder) return res.status(404).json({ error: 'Dossier parent non trouvé' });
+      if (!canContribute(parentFolder, req.user._id, req.user.role)) {
+        return res.status(403).json({ error: 'Vous n\'avez pas le droit de créer un dossier ici' });
+      }
+    }
+
     const folder = new Folder({
       name, parent: parent || null, visibility: visibility || 'Privé',
       allowedUsers: allowedUsers || [], createdBy: req.user._id, createdByName: req.user.name
