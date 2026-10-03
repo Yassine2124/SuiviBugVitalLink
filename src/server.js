@@ -5,6 +5,8 @@ const cors = require('cors');
 const authRoutes = require('./routes/authRoutes');
 const bugRoutes = require('./routes/bugRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
+const folderRoutes = require('./routes/folderRoutes');
+const documentRoutes = require('./routes/documentRoutes');
 const { protect } = require('./middleware/auth');
 
 const app = express();
@@ -15,6 +17,8 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/bugs', protect, bugRoutes);
 app.use('/api/upload', uploadRoutes);
+app.use('/api/folders', folderRoutes);
+app.use('/api/documents', documentRoutes);
 
 app.get('/', (req, res) => {
   res.send('Bug Tracker API is running');
