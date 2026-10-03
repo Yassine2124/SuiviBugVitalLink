@@ -4,6 +4,7 @@ const folderSchema = new mongoose.Schema({
   name: { type: String, required: true },
   parent: { type: mongoose.Schema.Types.ObjectId, ref: 'Folder', default: null },
   visibility: { type: String, enum: ['Privé', 'Public', 'Restreint'], default: 'Privé' },
+  publicCanContribute: { type: Boolean, default: false },
   allowedUsers: [{
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     role: { type: String, enum: ['Lecteur', 'Contributeur'], default: 'Lecteur' }

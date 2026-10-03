@@ -7,6 +7,7 @@ const documentSchema = new mongoose.Schema({
   fileType: { type: String },
   fileSize: { type: Number },
   visibility: { type: String, enum: ['Privé', 'Public', 'Restreint'], default: 'Privé' },
+  publicCanContribute: { type: Boolean, default: false },
   allowedUsers: [{
     userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
     role: { type: String, enum: ['Lecteur', 'Contributeur'], default: 'Lecteur' }

@@ -4,7 +4,7 @@ const { hasAccess, canContribute } = require('../middleware/docAccess');
 
 exports.uploadDocument = async (req, res) => {
   try {
-    const { name, folder, visibility, allowedUsers, fileUrl, fileType, fileSize } = req.body;
+    const { name, folder, visibility, allowedUsers, fileUrl, fileType, fileSize, publicCanContribute } = req.body;
 
     if (folder) {
       const parentFolder = await Folder.findById(folder);
@@ -16,7 +16,8 @@ exports.uploadDocument = async (req, res) => {
 
     const doc = new DocModel({
       name, folder: folder || null, fileUrl, fileType, fileSize,
-      visibility: visibility || 'Privé', allowedUsers: allowedUsers || [],
+      visibility: visibility || 'Privé', publicCanContribute: publicCanContribute || false,
+      allowedUsers: allowedUsers || [],
       createdBy: req.user._id, createdByName: req.user.name
     });
     await doc.save();

@@ -4,7 +4,7 @@ const { hasAccess, canContribute } = require('../middleware/docAccess');
 
 exports.createFolder = async (req, res) => {
   try {
-    const { name, parent, visibility, allowedUsers } = req.body;
+    const { name, parent, visibility, allowedUsers, publicCanContribute } = req.body;
 
     if (parent) {
       const parentFolder = await Folder.findById(parent);
@@ -16,6 +16,7 @@ exports.createFolder = async (req, res) => {
 
     const folder = new Folder({
       name, parent: parent || null, visibility: visibility || 'Privé',
+      publicCanContribute: publicCanContribute || false,
       allowedUsers: allowedUsers || [], createdBy: req.user._id, createdByName: req.user.name
     });
     await folder.save();
