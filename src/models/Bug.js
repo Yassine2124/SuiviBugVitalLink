@@ -10,9 +10,10 @@ const bugSchema = new mongoose.Schema({
   assignedTo: { type: String },
   testers: { type: [String], default: [] },
   priority: { type: String, enum: ['Haute', 'Moyenne', 'Basse'], default: 'Moyenne' },
-  status: { type: String, enum: ['Ouvert', 'En cours', 'En test', 'Résolu'], default: 'Ouvert' },
+  status: { type: String, enum: ['Ouvert', 'En cours', 'Dev terminé', 'En test', 'Résolu'], default: 'Ouvert' },
   dueDate: { type: Date },
-  imageUrl: { type: String }
+  imageUrl: { type: String },
+  createdBy: { type: String }
 }, { timestamps: true });
 
 module.exports = mongoose.model('Bug', bugSchema);

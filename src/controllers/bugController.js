@@ -21,7 +21,7 @@ exports.getBugById = async (req, res) => {
 
 exports.createBug = async (req, res) => {
   try {
-    const bug = new Bug(req.body);
+    const bug = new Bug({ ...req.body, createdBy: req.user.name });
     await bug.save();
     res.status(201).json(bug);
   } catch (err) {
@@ -31,8 +31,16 @@ exports.createBug = async (req, res) => {
 
 exports.updateBug = async (req, res) => {
   try {
+    const existing = await Bug.findById(req.params.id);
+    if (!existing) return res.status(404).json({ error: 'Bug non trouvé' });
+
+    if (req.body.status === 'Dev terminé' && existing.status !== 'Dev terminé') {
+      if (existing.assignedTo !== req.user.name && req.user.role !== 'admin') {
+        return res.status(403).json({ error: 'Seule la personne assignée peut marquer ce bug comme terminé' });
+      }
+    }
+
     const bug = await Bug.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
-    if (!bug) return res.status(404).json({ error: 'Bug non trouvé' });
     res.json(bug);
   } catch (err) {
     res.status(400).json({ error: err.message });
