@@ -5,9 +5,12 @@ const { protect, isAdmin } = require('../middleware/auth');
 
 router.post('/register', authController.register);
 router.post('/login', authController.login);
+router.get('/me', protect, authController.getMe);
 router.get('/pending', protect, isAdmin, authController.getPendingUsers);
 router.get('/users', protect, isAdmin, authController.getAllUsers);
 router.get('/team', protect, authController.getTeamMembers);
+router.get('/staff', protect, isAdmin, authController.getStaffMembers);
+router.put('/staff/:id', protect, isAdmin, authController.setStaff);
 router.put('/approve/:id', protect, isAdmin, authController.approveUser);
 router.put('/permissions/:id', protect, isAdmin, authController.updatePermissions);
 

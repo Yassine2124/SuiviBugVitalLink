@@ -7,6 +7,7 @@ const bugRoutes = require('./routes/bugRoutes');
 const uploadRoutes = require('./routes/uploadRoutes');
 const folderRoutes = require('./routes/folderRoutes');
 const documentRoutes = require('./routes/documentRoutes');
+const attendanceRoutes = require('./routes/attendanceRoutes');
 const { protect } = require('./middleware/auth');
 
 const app = express();
@@ -19,6 +20,7 @@ app.use('/api/bugs', protect, bugRoutes);
 app.use('/api/upload', uploadRoutes);
 app.use('/api/folders', folderRoutes);
 app.use('/api/documents', documentRoutes);
+app.use('/api/attendance', attendanceRoutes);
 
 app.get('/', (req, res) => {
   res.send('Bug Tracker API is running');

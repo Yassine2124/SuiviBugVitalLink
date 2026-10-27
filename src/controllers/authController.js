@@ -30,10 +30,18 @@ exports.login = async (req, res) => {
     if (!user.isApproved) return res.status(403).json({ error: 'Votre compte est en attente de validation' });
 
     const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET, { expiresIn: '7d' });
-    res.json({ token, user: { id: user._id, name: user.name, email: user.email, role: user.role, permissions: user.permissions } });
+    res.json({
+      token,
+      user: { id: user._id, name: user.name, email: user.email, role: user.role, permissions: user.permissions, isStaff: user.isStaff }
+    });
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
+};
+
+exports.getMe = async (req, res) => {
+  const u = req.user;
+  res.json({ id: u._id, name: u.name, email: u.email, role: u.role, permissions: u.permissions, isStaff: u.isStaff });
 };
 
 exports.getPendingUsers = async (req, res) => {
@@ -49,6 +57,21 @@ exports.getAllUsers = async (req, res) => {
 exports.getTeamMembers = async (req, res) => {
   const users = await User.find({ isApproved: true }).select('name email role');
   res.json(users);
+};
+
+exports.getStaffMembers = async (req, res) => {
+  const users = await User.find({ isApproved: true }).select('name email role isStaff').sort({ name: 1 });
+  res.json(users);
+};
+
+exports.setStaff = async (req, res) => {
+  const user = await User.findByIdAndUpdate(
+    req.params.id,
+    { isStaff: !!req.body.isStaff },
+    { new: true }
+  ).select('name email role isStaff');
+  if (!user) return res.status(404).json({ error: 'Utilisateur non trouvé' });
+  res.json(user);
 };
 
 exports.approveUser = async (req, res) => {
