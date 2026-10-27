@@ -13,7 +13,7 @@ const { protect } = require('./middleware/auth');
 const app = express();
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '1mb' }));
 
 app.use('/api/auth', authRoutes);
 app.use('/api/bugs', protect, bugRoutes);
