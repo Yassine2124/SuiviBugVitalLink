@@ -65,11 +65,9 @@ exports.getStaffMembers = async (req, res) => {
 };
 
 exports.setStaff = async (req, res) => {
-  const user = await User.findByIdAndUpdate(
-    req.params.id,
-    { isStaff: !!req.body.isStaff },
-    { new: true }
-  ).select('name email role isStaff');
+  const isStaff = !!req.body.isStaff;
+  const update = isStaff ? { isStaff: true, staffSince: new Date() } : { isStaff: false };
+  const user = await User.findByIdAndUpdate(req.params.id, update, { new: true }).select('name email role isStaff');
   if (!user) return res.status(404).json({ error: 'Utilisateur non trouvé' });
   res.json(user);
 };

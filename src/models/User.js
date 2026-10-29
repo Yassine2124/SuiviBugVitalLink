@@ -7,6 +7,7 @@ const userSchema = new mongoose.Schema({
   role: { type: String, enum: ['admin', 'member'], default: 'member' },
   isApproved: { type: Boolean, default: false },
   isStaff: { type: Boolean, default: false },
+  staffSince: { type: Date, default: null },
   permissions: {
     canView: { type: Boolean, default: true },
     canCreate: { type: Boolean, default: false },
